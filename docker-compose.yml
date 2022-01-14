@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  db_auth: 
+    image: postgres
+    container_name: db_auth
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=auth
+    volumes:
+      - pgdata:/data/postgres
+  app:
+    build: .
+    container_name: auth
+    ports:
+      - 3131:3131
+    volumes:
+      - .:/usr/app
+    links:
+      - db_auth
+    depends_on: 
+      - db_auth
+
+volumes:
+  pgdata:
+    driver: local
